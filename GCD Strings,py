@@ -1,0 +1,29 @@
+MOD = 1000000007
+
+def pow_mod(base, exponent, modulus=MOD):
+    result = 1
+    while exponent > 0:
+        if exponent % 2 == 1:
+            result = (result * base) % modulus
+        exponent //= 2
+        base = (base * base) % modulus
+    return result
+
+def func(x, n, length):
+    r = pow_mod(2, length)
+    temp = (pow_mod(r, n) - 1) * pow_mod(r - 1, MOD - 2) % MOD
+    temp = temp * x % MOD
+    return temp
+
+def gcd(a, b):
+    if a % b == 0:
+        return (pow_mod(2, a - 1), pow_mod(2, b - 1))
+    else:
+        x = gcd(b, a % b)
+        return ((func(x[0], a // b, b) * pow_mod(2, a % b) + x[1]) % MOD, x[0])
+
+T = int(input())
+for _ in range(T):
+    x, y = map(int, input().split())
+    result = gcd(x, y)
+    print(result[0])
